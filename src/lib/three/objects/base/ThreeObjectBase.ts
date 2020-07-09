@@ -1,5 +1,6 @@
 export default class ThreeObjectBase {
   parent: any;
+
   obj: any;
 
   constructor() {

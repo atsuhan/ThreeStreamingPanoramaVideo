@@ -4,8 +4,8 @@ import { baseStyle } from 'src/styles';
 
 import styled from '@emotion/styled';
 
-const Component: React.FCX = ({ className }) => (
-  <main className={className}>
+const Component: React.FCX = (): React.ReactElement => (
+  <main>
     <h1>Not Found</h1>
   </main>
 );
@@ -22,9 +22,11 @@ const StyledComponent = styled(Component)`
   }
 `;
 
-export default ({ path }: { path: string }) => (
+const Element = ({ path }: { path: string }): React.ReactElement => (
   <>
     <SEO title='Not Found' pathname={path} />
     <StyledComponent />
   </>
 );
+
+export default Element;

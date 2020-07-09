@@ -35,6 +35,7 @@
     "gatsby-source-filesystem": "^2.2.2",
     "glslify": "^7.0.0",
     "gsap": "^3.2.6",
+    "lodash": "^4.17.19",
     "node-sass": "^4.13.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -44,6 +45,7 @@
     "utility-types": "^3.10.0"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.157",
     "@types/node": "13.13.4",
     "@typescript-eslint/eslint-plugin": "2.30.0",
     "@typescript-eslint/parser": "2.30.0",
@@ -64,6 +66,8 @@
     "stylelint-declaration-block-no-ignored-properties": "2.3.0",
     "stylelint-no-unsupported-browser-features": "4.0.0",
     "stylelint-order": "4.0.0",
+    "three": "^0.118.3",
+    "type": "^2.0.0",
     "typescript": "3.8.3"
   }
 }

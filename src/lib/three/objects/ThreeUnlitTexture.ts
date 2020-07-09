@@ -9,6 +9,7 @@ const CONFIG_DEFAULT = {
 
 export default class ThreeUnlitTexture extends ThreeObjectBase {
   config: any;
+
   texture: any;
 
   constructor(config: any = null) {

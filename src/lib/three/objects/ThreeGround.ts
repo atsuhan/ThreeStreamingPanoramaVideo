@@ -15,6 +15,7 @@ const CONFIG_DEFAULT = {
 
 export default class ThreeGround extends ThreeObjectBase {
   config: any;
+
   material: any;
 
   constructor(config = null) {

@@ -1,7 +1,7 @@
 import _ from 'lodash';
+import { TweenMax, TimelineMax, Power2 } from 'gsap';
 import ThreeObjectBase from '../../base/ThreeObjectBase';
 import ThreeUnlitTexture from '../../ThreeUnlitTexture';
-import { TweenMax, TimelineMax, Power2 } from 'gsap';
 
 const DECORATION_PATH_DIR = {
   inner: `/img/webar/mv/decorations/TRIANGLE_FILL.png`,
@@ -10,6 +10,7 @@ const DECORATION_PATH_DIR = {
 
 export default class ThreeDecorationTriangle extends ThreeObjectBase {
   children: { [key: string]: any } = {};
+
   maxSize = 0.1;
 
   async init() {

@@ -12,6 +12,7 @@ const CONFIG_DEFAULT = {
 
 export default class ThreeVideoPlane extends ThreeObjectBase {
   config: any;
+
   elm: any;
 
   constructor(config: any = null) {

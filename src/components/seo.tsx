@@ -46,11 +46,11 @@ type JsonLdConfigProps = DeepReadonly<
       };
     };
     image:
-    | {
-      '@type': string;
-      url: string;
-    }
-    | string;
+      | {
+          '@type': string;
+          url: string;
+        }
+      | string;
     itemListElement: [
       {
         '@type': string;

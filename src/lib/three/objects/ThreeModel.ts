@@ -16,7 +16,9 @@ const loadGltf = (url: string) =>
 
 export default class ThreeModel extends ThreeObjectBase {
   config: any;
+
   model: any;
+
   objs: any;
 
   constructor(config: any = null) {

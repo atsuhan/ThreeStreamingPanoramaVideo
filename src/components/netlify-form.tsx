@@ -2,7 +2,7 @@ import React from 'react';
 
 import styled from '@emotion/styled';
 
-//this form works only Netlify
+// this form works only Netlify
 
 const Component: React.FCX = ({ className }) => (
   <form className={className} name='contact' method='POST' data-netlify='true' data-netlify-honeypot='bot-field'>
