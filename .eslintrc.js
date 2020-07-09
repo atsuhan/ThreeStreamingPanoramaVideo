@@ -23,6 +23,7 @@ module.exports = {
   },
   plugins: ['@typescript-eslint', 'react', 'import', 'jsx-a11y'],
   rules: {
+    '@typescript-eslint/no-use-before-define': 0,
     'import/extensions': [0],
     'import/no-unresolved': 0,
     'no-console': 0,
@@ -32,6 +33,8 @@ module.exports = {
     'no-return-assign': 0,
     'no-undef': 0,
     'prettier/prettier': 2,
+    'react/display-name': 0,
+    'react/static-property-placement': 0,
     'react/jsx-filename-extension': [
       2,
       {
