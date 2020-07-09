@@ -1,11 +1,41 @@
 import React from 'react';
 import * as THREE from 'three';
+import { OrbitControls } from 'three-orbitcontrols-ts';
 
+// ReactComponent
+class ThreeBaseComponent extends React.Component {
+  private canvasEl!: HTMLCanvasElement;
+
+  componentDidMount(): void {
+    initThreeRenderer(this.canvasEl);
+    initThreeScene();
+    initThreeCamera();
+    initThreeLight();
+
+    requestAnimationFrame(update); // loop
+  }
+
+  render(): React.ReactElement {
+    return (
+      <>
+        <canvas
+          ref={(el: HTMLCanvasElement): void => {
+            this.canvasEl = el;
+          }}
+        />
+      </>
+    );
+  }
+}
+export default ThreeBaseComponent;
+
+// Three.js functions
 let renderer: THREE.WebGLRenderer;
 let scene: THREE.Scene;
 let camera: THREE.PerspectiveCamera;
 let ambientlLight: THREE.AmbientLight;
 let directionalLight: THREE.DirectionalLight;
+let controls: OrbitControls;
 
 const initThreeRenderer = (canvasEl: HTMLCanvasElement): void => {
   renderer = new THREE.WebGLRenderer({
@@ -26,7 +56,10 @@ const initThreeScene = (): void => {
 const initThreeCamera = (): void => {
   camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight);
   camera.position.set(-10, 10, 10);
-  // new THREE.OrbitControls(camera, renderer.domElement);
+
+  // OrbitControls
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.update();
 };
 
 const initThreeLight = (): void => {
@@ -52,32 +85,3 @@ const update = (): void => {
   renderer.render(scene, camera);
   requestAnimationFrame(update);
 };
-
-// ReactComponent
-class ThreeBaseComponent extends React.Component {
-  private canvasEl!: HTMLCanvasElement;
-
-  componentDidMount(): void {
-    initThreeRenderer(this.canvasEl);
-    initThreeScene();
-    initThreeCamera();
-    initThreeLight();
-
-    requestAnimationFrame(update); // loop
-  }
-
-  render(): React.ReactElement {
-    return (
-      <>
-        <canvas
-          width='500px'
-          height='500px'
-          ref={(el: HTMLCanvasElement): void => {
-            this.canvasEl = el;
-          }}
-        />
-      </>
-    );
-  }
-}
-export default ThreeBaseComponent;
