@@ -1,1 +1,1 @@
-declare let THREE: any;
+declare module 'three-device-orientation';
