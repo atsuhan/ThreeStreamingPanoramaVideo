@@ -5,7 +5,6 @@ import DeviceOrientationControls from 'three-device-orientation';
 import getUA from 'src/lib/utils/getUA';
 
 const VIDEO_PATH = '/video/PanoramaSample.mp4';
-const UA = getUA();
 
 // ReactComponent
 class ThreeBaseComponent extends React.Component {
@@ -123,11 +122,12 @@ const initPanoramaVideo = (videlEl: HTMLVideoElement): void => {
 };
 
 const initControll = (): void => {
-  if (UA.isPC) {
+  const ua = getUA();
+  if (ua.isPC) {
     controll = new OrbitControls(camera, renderer.domElement);
   }
 
-  if (UA.isSP) {
+  if (ua.isSP) {
     window.addEventListener('deviceorientation', setOrientationControls, true);
   }
 };
