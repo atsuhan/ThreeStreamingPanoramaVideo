@@ -23,6 +23,7 @@ module.exports = {
   },
   plugins: ['@typescript-eslint', 'react', 'import', 'jsx-a11y'],
   rules: {
+    '@typescript-eslint/interface-name-prefix': 0,
     '@typescript-eslint/no-use-before-define': 0,
     'import/extensions': [0],
     'import/no-unresolved': 0,
