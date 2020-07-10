@@ -42,6 +42,7 @@ class ThreeBaseComponent extends React.Component {
             this.videoEl = el;
           }}
           muted
+          loop
           style={this.videoStyle}
         />
       </>
@@ -79,7 +80,7 @@ const initThreeCamera = (): void => {
     100,
     window.innerWidth / window.innerHeight
   );
-  // camera.position.set(0, 0, 1);
+  camera.position.set(0, 1.7, 0);
 };
 
 const initThreeLight = (): void => {
