@@ -11,7 +11,7 @@ class ThreeBaseComponent extends React.Component {
     initThreeScene();
     initThreeCamera();
     initThreeLight();
-    initCubeModel();
+    initSkySphere();
     initHelper();
 
     requestAnimationFrame(update); // loop
@@ -55,10 +55,11 @@ const initThreeScene = (): void => {
 
 const initThreeCamera = (): void => {
   camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight);
-  camera.position.set(0, 0, -20);
+  camera.position.set(0, 0, 1);
 
   // OrbitControls
   controls = new OrbitControls(camera, renderer.domElement);
+  controls.update();
 };
 
 const initThreeLight = (): void => {
@@ -80,12 +81,13 @@ const initThreeLight = (): void => {
   scene.add(directionalLight);
 };
 
-const initCubeModel = (): void => {
-  const boxGeom = new THREE.BoxGeometry(100, 100, 100);
-  const boxMaterial = new THREE.MeshLambertMaterial({ color: 'rgb(255, 0, 0)' });
-  const boxMesh = new THREE.Mesh(boxGeom, boxMaterial);
-  boxMesh.position.set(0, 0, -10);
-  scene.add(boxMesh);
+const initSkySphere = (): void => {
+  const geometry = new THREE.SphereGeometry(5, 60, 40, -1.58);
+  geometry.scale(-1, 1, 1);
+  const texture = new THREE.TextureLoader().load('/img/PanoramaSample.jpg');
+  const material = new THREE.MeshBasicMaterial({ map: texture });
+  const sphere = new THREE.Mesh(geometry, material);
+  scene.add(sphere);
 };
 
 const initHelper = (): void => {
@@ -99,7 +101,6 @@ const initHelper = (): void => {
 };
 
 const update = (): void => {
-  controls.update();
   renderer.render(scene, camera);
   requestAnimationFrame(update);
 };
