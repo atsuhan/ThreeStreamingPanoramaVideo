@@ -11,6 +11,9 @@ class ThreeBaseComponent extends React.Component {
     initThreeScene();
     initThreeCamera();
     initThreeLight();
+    initCubeModel();
+    initHelper();
+
     requestAnimationFrame(update); // loop
   }
 
@@ -52,11 +55,10 @@ const initThreeScene = (): void => {
 
 const initThreeCamera = (): void => {
   camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight);
-  camera.position.set(-10, 10, 10);
+  camera.position.set(0, 0, -20);
 
   // OrbitControls
   controls = new OrbitControls(camera, renderer.domElement);
-  controls.update();
 };
 
 const initThreeLight = (): void => {
@@ -78,7 +80,26 @@ const initThreeLight = (): void => {
   scene.add(directionalLight);
 };
 
+const initCubeModel = (): void => {
+  const boxGeom = new THREE.BoxGeometry(100, 100, 100);
+  const boxMaterial = new THREE.MeshLambertMaterial({ color: 'rgb(255, 0, 0)' });
+  const boxMesh = new THREE.Mesh(boxGeom, boxMaterial);
+  boxMesh.position.set(0, 0, -10);
+  scene.add(boxMesh);
+};
+
+const initHelper = (): void => {
+  // grid helper
+  const gridHelper = new THREE.GridHelper(20, 20);
+  scene.add(gridHelper);
+
+  // camera helper
+  const lightHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
+  scene.add(lightHelper);
+};
+
 const update = (): void => {
+  controls.update();
   renderer.render(scene, camera);
   requestAnimationFrame(update);
 };
