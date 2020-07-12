@@ -1,4 +1,28 @@
-export default (): any => {
+type uaTypes = {
+  isSP: boolean;
+  isPC: boolean;
+  Tablet: boolean;
+  Mobile: boolean;
+  iOS: boolean;
+  iPad: boolean;
+  iPhone: boolean;
+  Android: boolean;
+  MSIE: boolean;
+  IE6: boolean;
+  IE7: boolean;
+  IE8: boolean;
+  IE9: boolean;
+  IE10: boolean;
+  IE11: boolean;
+  IE: boolean;
+  Edge: boolean;
+  Chrome: boolean;
+  Firefox: boolean;
+  Safari: boolean;
+  Opera: boolean;
+};
+
+export default (): uaTypes => {
   const ua = window.navigator.userAgent.toLowerCase();
   const ver = window.navigator.appVersion.toLowerCase();
 
