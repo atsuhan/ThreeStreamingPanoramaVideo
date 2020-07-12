@@ -51,33 +51,4 @@ class OrientationPermissionButton extends React.Component<Props, State> {
     return <></>;
   }
 }
-
-/*
-const OrientationPermissionButton: React.FC<Props> = (props: Props) => {
-  const isIOS13: boolean =
-    DeviceMotionEvent &&
-    typeof DeviceMotionEvent.requestPermission === 'function';
-
-  let isView = isIOS13;
-
-  const clickEvent = (): void => {
-    DeviceOrientationEvent.requestPermission()
-      .then((response) => {
-        if (response === 'granted') {
-          isView = false;
-          props.onClick();
-        }
-      })
-      .catch(console.error);
-  };
-
-  if (isView)
-    return (
-      <button type='button' onClick={clickEvent} style={buttonStyle}>
-        Please permit orientation
-      </button>
-    );
-  return null;
-};
-*/
 export default OrientationPermissionButton;
