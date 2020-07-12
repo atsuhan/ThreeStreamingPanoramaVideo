@@ -35,6 +35,7 @@ module.exports = {
     'no-undef': 0,
     'prettier/prettier': 2,
     'react/display-name': 0,
+    'react/destructuring-assignment': 0,
     'react/static-property-placement': 0,
     'jsx-a11y/media-has-caption': 0,
     'react/jsx-filename-extension': [

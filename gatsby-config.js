@@ -23,6 +23,7 @@ module.exports = {
     // style
     `gatsby-plugin-emotion`,
     `gatsby-plugin-sass`,
+    'gatsby-plugin-typescript-scss-modules',
     {
       resolve: `gatsby-source-filesystem`,
       options: {

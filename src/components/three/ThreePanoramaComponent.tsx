@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three-orbitcontrols-ts';
 import DeviceOrientationControls from 'three-device-orientation';
 import getUA from 'src/lib/utils/getUA';
+import OrientationPermissionButton from '../OrientationPermissionButton/OrientationPermissionButton';
 
 const VIDEO_PATH = '/video/PanoramaSample.mp4';
 
@@ -31,6 +32,15 @@ class ThreeBaseComponent extends React.Component {
   render(): React.ReactElement {
     return (
       <>
+        <OrientationPermissionButton
+          onClick={(): void => {
+            window.addEventListener(
+              'deviceorientation',
+              setOrientationControls,
+              true
+            );
+          }}
+        />
         <canvas
           ref={(el: HTMLCanvasElement): void => {
             this.canvasEl = el;
@@ -40,8 +50,10 @@ class ThreeBaseComponent extends React.Component {
           ref={(el: HTMLVideoElement): void => {
             this.videoEl = el;
           }}
+          autoPlay
           muted
           loop
+          playsInline
           style={this.videoStyle}
         />
       </>
@@ -106,7 +118,6 @@ const initPanoramaVideo = (videlEl: HTMLVideoElement): void => {
   videlEl.load();
 
   videlEl.addEventListener('loadedmetadata', (): void => {
-    videlEl.play();
     const geometry = new THREE.SphereGeometry(5, 60, 40, -1.58);
     geometry.scale(-1, 1, 1);
 
