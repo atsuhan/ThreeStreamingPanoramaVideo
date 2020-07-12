@@ -19,7 +19,7 @@ const buttonStyle: React.CSSProperties = {
 
 class OrientationPermissionButton extends React.Component<Props, State> {
   isIOS13 =
-    DeviceMotionEvent &&
+    typeof DeviceMotionEvent !== 'undefined' &&
     typeof DeviceMotionEvent.requestPermission === 'function';
 
   constructor(props: Props) {
