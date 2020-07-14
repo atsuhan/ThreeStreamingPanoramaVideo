@@ -3,9 +3,11 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three-orbitcontrols-ts';
 import DeviceOrientationControls from 'three-device-orientation';
 import getUA from 'src/lib/utils/getUA';
+import Hls from 'hls.js';
 import OrientationPermissionButton from '../OrientationPermissionButton/OrientationPermissionButton';
 
-const VIDEO_PATH = '/video/PanoramaSample.mp4';
+const VIDEO_PATH =
+  'https://bitmovin-a.akamaihd.net/content/playhouse-vr/m3u8s/105560.m3u8';
 
 // ReactComponent
 class ThreeBaseComponent extends React.Component {
@@ -114,22 +116,34 @@ const initThreeLight = (): void => {
 };
 
 const initPanoramaVideo = (videlEl: HTMLVideoElement): void => {
-  videlEl.src = VIDEO_PATH;
-  videlEl.load();
+  if (Hls.isSupported()) {
+    const hls = new Hls();
+    hls.loadSource(VIDEO_PATH);
+    hls.attachMedia(videlEl);
+    hls.on(Hls.Events.MANIFEST_PARSED, (): void => {
+      videlEl.play();
+      initSphere(videlEl);
+    });
+  } else if (videlEl.canPlayType('application/vnd.apple.mpegurl')) {
+    videlEl.src = VIDEO_PATH;
+    videlEl.addEventListener('loadedmetadata', (): void => {
+      initSphere(videlEl);
+    });
+  }
+};
 
-  videlEl.addEventListener('loadedmetadata', (): void => {
-    const geometry = new THREE.SphereGeometry(5, 60, 40, -1.58);
-    geometry.scale(-1, 1, 1);
+const initSphere = (videlEl: HTMLVideoElement): void => {
+  const geometry = new THREE.SphereGeometry(5, 60, 40, -1.58);
+  geometry.scale(-1, 1, 1);
 
-    const texture: THREE.Texture = new THREE.VideoTexture(videlEl);
-    texture.minFilter = THREE.LinearFilter;
-    texture.magFilter = THREE.LinearFilter;
-    texture.format = THREE.RGBFormat;
+  const texture: THREE.Texture = new THREE.VideoTexture(videlEl);
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.format = THREE.RGBFormat;
 
-    const material = new THREE.MeshBasicMaterial({ map: texture });
-    const sphere = new THREE.Mesh(geometry, material);
-    scene.add(sphere);
-  });
+  const material = new THREE.MeshBasicMaterial({ map: texture });
+  const sphere = new THREE.Mesh(geometry, material);
+  scene.add(sphere);
 };
 
 const initControll = (): void => {
