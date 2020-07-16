@@ -15,8 +15,18 @@ class ThreeBaseComponent extends React.Component {
 
   private videoEl!: HTMLVideoElement;
 
-  private videoStyle = {
-    display: 'none',
+  private canvasStyle: React.CSSProperties = {
+    width: '100%',
+    height: '100%',
+  };
+
+  private videoStyle: React.CSSProperties = {
+    position: 'fixed',
+    width: '38.4%',
+    height: '21.6%',
+    left: 0,
+    top: 0,
+    zIndex: 10000,
   };
 
   componentDidMount(): void {
@@ -47,14 +57,13 @@ class ThreeBaseComponent extends React.Component {
           ref={(el: HTMLCanvasElement): void => {
             this.canvasEl = el;
           }}
+          style={this.canvasStyle}
         />
         <video
           ref={(el: HTMLVideoElement): void => {
             this.videoEl = el;
           }}
-          autoPlay
           muted
-          loop
           playsInline
           style={this.videoStyle}
         />
@@ -115,20 +124,20 @@ const initThreeLight = (): void => {
   scene.add(directionalLight);
 };
 
-const initPanoramaVideo = (videlEl: HTMLVideoElement): void => {
+const initPanoramaVideo = (videoEl: HTMLVideoElement): void => {
   if (Hls.isSupported()) {
     const hls = new Hls();
     hls.loadSource(VIDEO_PATH);
-    hls.attachMedia(videlEl);
+    hls.attachMedia(videoEl);
     hls.on(Hls.Events.MANIFEST_PARSED, (): void => {
-      videlEl.play();
-      initSphere(videlEl);
+      videoEl.play();
+      initSphere(videoEl);
     });
-  } else if (videlEl.canPlayType('application/vnd.apple.mpegurl')) {
-    videlEl.src = VIDEO_PATH;
-    videlEl.addEventListener('loadedmetadata', (): void => {
-      initSphere(videlEl);
-    });
+  } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
+    videoEl.src = VIDEO_PATH;
+    videoEl.controls = true;
+    videoEl.autoplay = true;
+    initSphere(videoEl);
   }
 };
 
