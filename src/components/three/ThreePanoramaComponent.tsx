@@ -69,7 +69,7 @@ const initPanoramaVideo = (videoEl: HTMLVideoElement): void => {
   video = videoEl;
 
   const ua = getUA();
-  if (!ua.Safari) {
+  if (!ua.Safari || ua.iPadOS) {
     initNonIOSSafariVideo(videoEl);
   } else {
     initIOSSafari(videoEl);

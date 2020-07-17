@@ -5,6 +5,7 @@ type uaTypes = {
   Mobile: boolean;
   iOS: boolean;
   iPad: boolean;
+  iPadOS: boolean;
   iPhone: boolean;
   Android: boolean;
   MSIE: boolean;
@@ -54,6 +55,7 @@ export default (): uaTypes => {
       ua.indexOf('ipod') !== -1 ||
       ua.indexOf('ipad') !== -1,
     iPad: ua.indexOf('ipad') !== -1,
+    iPadOS: ua.indexOf('macintosh') > -1 && 'ontouchend' in document,
     iPhone: ua.indexOf('iphone') !== -1,
     Android: ua.indexOf('android') !== -1,
     MSIE: isMSIE, // IE11以外
