@@ -90,6 +90,7 @@ const initNonIOSSafariVideo = (videoEl: HTMLVideoElement): void => {
 
 const initIOSSafari = (videoEl: HTMLVideoElement): void => {
   videoEl.src = VIDEO_PATH;
+  videoEl.crossOrigin = '';
   videoEl.autoplay = true;
 
   videoCanvas = document.createElement('canvas');
@@ -217,6 +218,7 @@ class ThreeBaseComponent extends React.Component {
             this.videoEl = el;
           }}
           muted
+          playsInline
           style={this.videoStyle}
         />
       </>
