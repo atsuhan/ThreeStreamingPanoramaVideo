@@ -68,9 +68,10 @@ const initThreeLight = (): void => {
 const initPanoramaVideo = (videoEl: HTMLVideoElement): void => {
   video = videoEl;
 
-  if (Hls.isSupported()) {
+  const ua = getUA();
+  if (!ua.Safari) {
     initNonIOSSafariVideo(videoEl);
-  } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
+  } else {
     initIOSSafari(videoEl);
   }
 };
