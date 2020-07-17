@@ -9,70 +9,6 @@ import OrientationPermissionButton from '../OrientationPermissionButton/Orientat
 const VIDEO_PATH =
   'https://bitmovin-a.akamaihd.net/content/playhouse-vr/m3u8s/105560.m3u8';
 
-// ReactComponent
-class ThreeBaseComponent extends React.Component {
-  private canvasEl!: HTMLCanvasElement;
-
-  private videoEl!: HTMLVideoElement;
-
-  private canvasStyle: React.CSSProperties = {
-    width: '100%',
-    height: '100%',
-  };
-
-  private videoStyle: React.CSSProperties = {
-    position: 'fixed',
-    width: '38.4%',
-    height: '21.6%',
-    left: 0,
-    top: 0,
-    zIndex: 10000,
-  };
-
-  componentDidMount(): void {
-    initThreeRenderer(this.canvasEl);
-    initThreeScene();
-    initThreeCamera();
-    initThreeLight();
-    initPanoramaVideo(this.videoEl);
-    initHelper();
-    initControll();
-
-    requestAnimationFrame(update); // loop
-  }
-
-  render(): React.ReactElement {
-    return (
-      <>
-        <OrientationPermissionButton
-          onClick={(): void => {
-            window.addEventListener(
-              'deviceorientation',
-              setOrientationControls,
-              true
-            );
-          }}
-        />
-        <canvas
-          ref={(el: HTMLCanvasElement): void => {
-            this.canvasEl = el;
-          }}
-          style={this.canvasStyle}
-        />
-        <video
-          ref={(el: HTMLVideoElement): void => {
-            this.videoEl = el;
-          }}
-          muted
-          playsInline
-          style={this.videoStyle}
-        />
-      </>
-    );
-  }
-}
-export default ThreeBaseComponent;
-
 // Three.js functions
 let renderer: THREE.WebGLRenderer;
 let scene: THREE.Scene;
@@ -80,6 +16,10 @@ let camera: THREE.PerspectiveCamera;
 let ambientlLight: THREE.AmbientLight;
 let directionalLight: THREE.DirectionalLight;
 let controll: any;
+let video: HTMLVideoElement;
+let videoCanvas: HTMLCanvasElement;
+let videoCtx: CanvasRenderingContext2D | null;
+let material: THREE.MeshBasicMaterial;
 
 const initThreeRenderer = (canvasEl: HTMLCanvasElement): void => {
   renderer = new THREE.WebGLRenderer({
@@ -125,33 +65,53 @@ const initThreeLight = (): void => {
 };
 
 const initPanoramaVideo = (videoEl: HTMLVideoElement): void => {
+  video = videoEl;
+
   if (Hls.isSupported()) {
-    const hls = new Hls();
-    hls.loadSource(VIDEO_PATH);
-    hls.attachMedia(videoEl);
-    hls.on(Hls.Events.MANIFEST_PARSED, (): void => {
-      videoEl.play();
-      initSphere(videoEl);
-    });
+    initNonIOSSafariVideo(videoEl);
   } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
-    videoEl.src = VIDEO_PATH;
-    videoEl.controls = true;
-    videoEl.autoplay = true;
-    initSphere(videoEl);
+    initIOSSafari(videoEl);
   }
 };
 
-const initSphere = (videlEl: HTMLVideoElement): void => {
+const initNonIOSSafariVideo = (videoEl: HTMLVideoElement): void => {
+  const hls = new Hls();
+  hls.loadSource(VIDEO_PATH);
+  hls.attachMedia(videoEl);
+  hls.on(Hls.Events.MANIFEST_PARSED, (): void => {
+    videoEl.play();
+
+    const tex = new THREE.VideoTexture(videoEl);
+    initSphere(tex);
+  });
+};
+
+const initIOSSafari = (videoEl: HTMLVideoElement): void => {
+  videoEl.src = VIDEO_PATH;
+  videoEl.autoplay = true;
+
+  videoCanvas = document.createElement('canvas');
+  videoCanvas.width = 600;
+  videoCanvas.height = 600;
+  videoCtx = videoCanvas.getContext('2d');
+
+  const tex = new THREE.CanvasTexture(videoCanvas);
+  tex.needsUpdate = true;
+
+  initSphere(tex);
+};
+
+const initSphere = (tex: THREE.Texture): void => {
   const geometry = new THREE.SphereGeometry(5, 60, 40, -1.58);
   geometry.scale(-1, 1, 1);
 
-  const texture: THREE.Texture = new THREE.VideoTexture(videlEl);
-  texture.minFilter = THREE.LinearFilter;
-  texture.magFilter = THREE.LinearFilter;
-  texture.format = THREE.RGBFormat;
+  material = new THREE.MeshBasicMaterial({
+    map: tex,
+  });
+  if (material.map) material.map.needsUpdate = true;
 
-  const material = new THREE.MeshBasicMaterial({ map: texture });
   const sphere = new THREE.Mesh(geometry, material);
+  sphere.position.set(0, 0, -1);
   scene.add(sphere);
 };
 
@@ -173,16 +133,86 @@ const setOrientationControls = (): void => {
 };
 
 const initHelper = (): void => {
-  // grid helper
-  const gridHelper = new THREE.GridHelper(20, 20);
+  const gridHelper = new THREE.GridHelper(10, 10);
   scene.add(gridHelper);
-
-  // const lightHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
-  // scene.add(lightHelper);
 };
 
 const update = (): void => {
+  if (videoCtx) {
+    videoCtx.drawImage(video, 0, 0, videoCanvas.width, videoCanvas.height);
+    if (material.map) material.map.needsUpdate = true;
+  }
+
+  requestAnimationFrame(update);
   if (controll) controll.update();
   renderer.render(scene, camera);
-  requestAnimationFrame(update);
 };
+
+const onResize = (): void => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+};
+
+// ReactComponent
+class ThreeBaseComponent extends React.Component {
+  private canvasEl!: HTMLCanvasElement;
+
+  private videoEl!: HTMLVideoElement;
+
+  private canvasStyle: React.CSSProperties = {
+    width: '100%',
+    height: '100%',
+  };
+
+  private videoStyle: React.CSSProperties = {
+    position: 'fixed',
+    width: '38.4%',
+    height: '21.6%',
+    left: 0,
+    top: 0,
+    zIndex: 10000,
+  };
+
+  componentDidMount(): void {
+    initThreeRenderer(this.canvasEl);
+    initThreeScene();
+    initThreeCamera();
+    initThreeLight();
+    initPanoramaVideo(this.videoEl);
+    initHelper();
+    initControll();
+
+    requestAnimationFrame(update); // loop
+    window.addEventListener('resize', onResize, true);
+  }
+
+  render(): React.ReactElement {
+    return (
+      <>
+        <OrientationPermissionButton
+          onClick={(): void => {
+            window.addEventListener(
+              'deviceorientation',
+              setOrientationControls,
+              true
+            );
+          }}
+        />
+        <canvas
+          ref={(el: HTMLCanvasElement): void => {
+            this.canvasEl = el;
+          }}
+          style={this.canvasStyle}
+        />
+        <video
+          ref={(el: HTMLVideoElement): void => {
+            this.videoEl = el;
+          }}
+          muted
+          style={this.videoStyle}
+        />
+      </>
+    );
+  }
+}
+export default ThreeBaseComponent;
