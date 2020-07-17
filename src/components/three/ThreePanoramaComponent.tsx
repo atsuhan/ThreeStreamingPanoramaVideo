@@ -93,8 +93,8 @@ const initIOSSafari = (videoEl: HTMLVideoElement): void => {
   videoEl.autoplay = true;
 
   videoCanvas = document.createElement('canvas');
-  videoCanvas.width = 1200;
-  videoCanvas.height = 600;
+  videoCanvas.width = 1024;
+  videoCanvas.height = 512;
   videoCanvas.style.position = 'fixed';
   videoCanvas.style.top = '0';
   videoCanvas.style.right = '0';
