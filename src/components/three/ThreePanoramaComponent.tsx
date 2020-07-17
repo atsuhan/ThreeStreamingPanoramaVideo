@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import React from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three-orbitcontrols-ts';
@@ -91,8 +92,14 @@ const initIOSSafari = (videoEl: HTMLVideoElement): void => {
   videoEl.autoplay = true;
 
   videoCanvas = document.createElement('canvas');
-  videoCanvas.width = 600;
+  videoCanvas.width = 1200;
   videoCanvas.height = 600;
+  videoCanvas.style.position = 'fixed';
+  videoCanvas.style.top = '0';
+  videoCanvas.style.right = '0';
+  videoCanvas.style.width = '20%';
+  videoCanvas.style.height = 'auto';
+  document.body.appendChild(videoCanvas);
   videoCtx = videoCanvas.getContext('2d');
 
   const tex = new THREE.CanvasTexture(videoCanvas);
